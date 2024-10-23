@@ -1,13 +1,32 @@
-const handleSubmit = async (event) => {
-    event.preventDefault(); 
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
 
-    // Extract fields from the form, and
-    // send a request to create a new restaurant
+    form.addEventListener("submit", (event) => {
+        event.preventDefault(); // Prevent the default form submission behavior
 
-}
+        // Extract values from the form fields
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const photo = document.getElementById('photo').value; // Use a default photo if none is provided
 
-document.addEventListener('DOMContentLoaded', () => {
- 
-    // Add event listener to the form for submit events
-
+        // Send a POST request to the backend to create the restaurant
+        fetch('/api/restaurants', 
+            {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {name,phone,address,photo}
+            ),
+        }).then(response =>{
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            window.location.hret = `/restaurants/${data.id}`;
+        }).catch(error =>{
+            console.error('error:', error);
+        })
+    });
 });

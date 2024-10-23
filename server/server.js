@@ -1,7 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { restaurants } from './data/restaurants.js';
+import { getRestaurants, getRestaurant, createRestaurant, deleteRestaurant, updateRestaurant } from './data/restaurants.js';
+import { backendRouter } from './routes/api.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,12 +11,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/api", backendRouter);
 
 
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
+//static pages
 app.get('/index', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -24,10 +26,25 @@ app.get('/attractions', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'attractions.html'));
 });
 
-//dynamic stuff for the new pages
+
+
+//dynamic pages
 app.get('/restaurants', (req, res) => {
-  res.render('restaurants', { restaurants });
+  const restaurants = getRestaurants(); // Retrieve the list of restaurants
+  res.render('restaurants', { restaurants }); // Render the page with restaurant data
 });
+
+app.get('/restaurants/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const restaurant = getRestaurant(id);
+  if (restaurant) {
+    res.render('restaurant-details', { restaurant });  // Corrected the quotes and passing restaurant data
+  } else {
+    res.status(404).send('Restaurant not found');
+  }
+});
+
+
 
 app.get('/new-restaurant', (req, res) => {
   res.render('new-restaurant');
