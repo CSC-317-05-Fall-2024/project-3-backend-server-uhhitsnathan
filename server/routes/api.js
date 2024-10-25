@@ -12,6 +12,7 @@ router.get('/restaurants', (req, res) => {
 
 
 router.post('/restaurants', (req, res) => {
+    console.log(req.body);
     const restaurantData = req.body;
     try{
         const restaurant = createRestaurant(restaurantData);

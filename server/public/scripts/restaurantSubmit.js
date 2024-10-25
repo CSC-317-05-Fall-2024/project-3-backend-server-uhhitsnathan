@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         }).then(data => {
             console.log(data);
-            window.location.hret = `/restaurants/${data.id}`;
+            window.location.href = '/restaurants';
         }).catch(error =>{
             console.error('error:', error);
         })
